@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Reservation {
+  id         String   @id @default(uuid())
+  start_date DateTime
+  end_date   DateTime
+  place_id   String
+  invoice_id String
+  timestamp  DateTime
+
+  @@map("reservations")
+}
+
+model AbstractDocument {
+  id String @id @default(uuid())
+}
