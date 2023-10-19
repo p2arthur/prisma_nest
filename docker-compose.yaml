@@ -1,0 +1,24 @@
+services:
+  reservations:
+    build:
+      context: .
+      dockerfile: ./apps/reservations/Dockerfile
+      target: development
+    command: pnpm run start:dev reservations
+    depends_on:
+      - postgres
+    environment:
+        DATABASE_URL: postgres://user.password@postgres:5432/db
+    ports:
+      - "8080:3000"
+    volumes:
+      - .:/usr/src/app
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "35000:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
