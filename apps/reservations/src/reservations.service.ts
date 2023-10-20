@@ -10,7 +10,7 @@ export class ReservationsService {
   private reservation: Reservation;
   private reservations: Reservation[];
 
-  async create(
+  async createReservation(
     createReservationDto: CreateReservationDto,
   ): Promise<Reservation> {
     this.reservation = await this.prismaService.reservation.create({
@@ -20,7 +20,7 @@ export class ReservationsService {
     return this.reservation;
   }
 
-  async findAll() {
+  async findAllReservations() {
     this.reservations = await this.prismaService.reservation.findMany();
     if (this.reservations.length <= 0) {
       throw new NotFoundException();
@@ -28,7 +28,7 @@ export class ReservationsService {
     return this.reservations;
   }
 
-  async findOne(id: string) {
+  async findOneReservation(id: string) {
     this.reservation = await this.prismaService.reservation.findUnique({
       where: { id },
     });
@@ -39,7 +39,10 @@ export class ReservationsService {
     return this.reservation;
   }
 
-  async update(id: string, updateReservationDto: UpdateReservationDto) {
+  async updateReservation(
+    id: string,
+    updateReservationDto: UpdateReservationDto,
+  ) {
     const reservationToUpdate = await this.prismaService.reservation.findUnique(
       { where: { id } },
     );
@@ -54,7 +57,7 @@ export class ReservationsService {
     });
   }
 
-  async remove(id: string) {
+  async removeReservation(id: string) {
     const reservationToDelete = await this.prismaService.reservation.findUnique(
       { where: { id } },
     );
