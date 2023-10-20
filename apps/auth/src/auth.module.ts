@@ -5,18 +5,23 @@ import { UsersModule } from './users/users.module';
 import { LoggerModule } from '@app/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { Logger } from 'nestjs-pino';
-import Joi from 'joi';
+import { LocalStrategy } from './strategies/local.strategy';
+import { UsersService } from './users/users.service';
+import { PrismaService } from '@app/common/database/PrismaServices';
 
 @Module({
   imports: [
     UsersModule,
     LoggerModule,
 
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: './apps/auth/auth.env',
+    }),
+
     JwtModule.registerAsync({
-      imports: [ConfigModule],
+      imports: [],
       useFactory: (configService: ConfigService) => {
-        console.log(configService.get<string>('JWT_SECRET'));
         return {
           secret: configService.get<string>('JWT_SECRET'),
           signOptions: {
@@ -27,17 +32,8 @@ import Joi from 'joi';
       inject: [ConfigService],
     }),
     LoggerModule,
-
-    ConfigModule.forRoot({
-      isGlobal: true,
-      validationSchema: Joi.object({
-        JWT_SECRET: Joi.string().required(),
-        JWT_EXPIRATION: Joi.string().required(),
-        PORT: Joi.string().required(),
-      }),
-    }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, LocalStrategy, UsersService, PrismaService],
 })
 export class AuthModule {}
