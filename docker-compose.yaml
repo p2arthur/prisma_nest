@@ -14,6 +14,8 @@ services:
     volumes:
       - .:/usr/src/app
 
+  auth:
+    build:
   postgres:
     image: postgres:latest
     ports:

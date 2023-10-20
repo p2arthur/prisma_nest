@@ -4,11 +4,16 @@ import { ReservationsController } from './reservations.controller';
 import { DatabaseModule, LoggerModule } from '@app/common';
 import { PrismaService } from '@app/common/database/PrismaServices';
 import { ReservationRepository } from './reservations.repository';
-
-import { pinoHttp } from 'pino-http';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [DatabaseModule, LoggerModule],
+  imports: [
+    DatabaseModule,
+    LoggerModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+  ],
   controllers: [ReservationsController],
   providers: [ReservationsService, PrismaService, ReservationRepository],
 })
