@@ -5,6 +5,7 @@ import { DatabaseModule, LoggerModule } from '@app/common';
 import { PrismaService } from '@app/common/database/PrismaServices';
 import { ReservationRepository } from './reservations.repository';
 import { ConfigModule } from '@nestjs/config';
+import { JwtStrategy } from 'apps/auth/src/strategies/jwt.strategy';
 
 @Module({
   imports: [

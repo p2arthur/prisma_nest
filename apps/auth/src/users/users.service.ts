@@ -1,7 +1,9 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { PrismaService } from '@app/common/database/PrismaServices';
@@ -13,6 +15,16 @@ export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const userExists = await this.prismaService.user.findFirst({
+      where: { email: createUserDto.email },
+    });
+
+    if (userExists) {
+      throw new UnprocessableEntityException(
+        'User with the given email already exists',
+      );
+    }
+
     const password = await bcrypt.hash(createUserDto.password, 10);
     const user = this.prismaService.user.create({
       data: { ...createUserDto, password },
